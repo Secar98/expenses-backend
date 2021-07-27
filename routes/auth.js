@@ -36,11 +36,7 @@ router.post("/signup", async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  try {
-    const userExists = await User.exists({ email: email });
-  } catch (error) {
-    console.log(error);
-  }
+  const userExists = await User.exists({ email: email });
   if (userExists) {
     res.json({ msg: "User already exists" });
   } else {
