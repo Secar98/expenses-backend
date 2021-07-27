@@ -5,7 +5,7 @@ require("dotenv").config();
 const authRoute = require("./routes/auth");
 const indexRoute = require("./routes/index");
 
-const dbURI = process.env.DB_HOST;
+const dbURI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@usertest.osg3b.mongodb.net/expenses`;
 const PORT = process.env.PORT || 5000;
 
 app.use(express.urlencoded({ extended: true }));
@@ -23,5 +23,5 @@ mongoose
   .catch((error) => console.log(error));
 
 app.listen(PORT, () => {
-  console.log("Server started: 5000");
+  console.log(`Server started: ${PORT}`);
 });
