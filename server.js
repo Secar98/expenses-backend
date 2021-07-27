@@ -6,6 +6,8 @@ const authRoute = require("./routes/auth");
 const indexRoute = require("./routes/index");
 
 const dbURI = process.env.DB_HOST;
+const PORT = process.env.PORT || 5000;
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/", indexRoute);
@@ -20,6 +22,6 @@ mongoose
   .then(() => console.log("MongoDB connected..."))
   .catch((error) => console.log(error));
 
-app.listen(5000, () => {
+app.listen(PORT, () => {
   console.log("Server started: 5000");
 });
