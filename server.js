@@ -5,8 +5,7 @@ require("dotenv").config();
 const authRoute = require("./routes/auth");
 const indexRoute = require("./routes/index");
 
-const dbURI =
-  "mongodb+srv://Sebcar98:Sebbe191@usertest.osg3b.mongodb.net/expenses";
+const dbURI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@usertest.osg3b.mongodb.net/expenses`;
 const PORT = process.env.PORT || 5000;
 
 app.use(express.urlencoded({ extended: true }));
