@@ -3,13 +3,13 @@ const router = express.Router();
 const User = require("../models/user");
 const middlewear = require("../middlewear");
 const bcrypt = require("bcrypt");
-const rounds = 10;
+const rounds = process.env.BCRYPT_SALT;
 
 const jwt = require("jsonwebtoken");
-const tokenSecret = "my-secret-token";
+const tokenSecret = process.env.TOKEN_SECRET;
 
 router.get("/jwt-test", middlewear.verify, (req, res) => {
-  res.status(200).json(req.user);
+  res.status(200).json({ msg: "It works" });
 });
 
 router.get("/login", (req, res) => {
@@ -22,8 +22,9 @@ router.get("/login", (req, res) => {
       } else {
         bcrypt.compare(password, user.password, (error, match) => {
           if (error) res.status(500).json(error);
-          else if (match) res.status(200).json({ token: generateToken });
-          else res.status(403).json({ msg: "password does not match" });
+          else if (match)
+            res.status(200).json({ token: generateToken(user._id) });
+          else res.status(403).json({ msg: "wrong email or password" });
         });
       }
     })
@@ -37,8 +38,11 @@ router.post("/signup", async (req, res) => {
   const password = req.body.password;
 
   const userExists = await User.exists({ email: email });
+
   if (userExists) {
     res.json({ msg: "User already exists" });
+  } else if (password.length < 6) {
+    res.status(400).json({ msg: "password must be 6 characters long" });
   } else {
     bcrypt.hash(password, rounds, (error, hash) => {
       if (error) res.status(500).json(error);
@@ -47,7 +51,7 @@ router.post("/signup", async (req, res) => {
         newUser
           .save()
           .then((user) => {
-            res.status(200).json({ token: generateToken(user) });
+            res.status(200).json({ token: generateToken(user._id) });
           })
           .catch((error) => {
             res.status(500).json(error);
@@ -58,7 +62,7 @@ router.post("/signup", async (req, res) => {
 });
 
 const generateToken = (user) => {
-  return jwt.sign({ data: user }, tokenSecret, { expiresIn: "24h" });
+  return jwt.sign({ data: user }, tokenSecret, { expiresIn: "30m" });
 };
 
 module.exports = router;
