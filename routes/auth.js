@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require("../models/user");
 const middlewear = require("../middlewear");
 const bcrypt = require("bcrypt");
-const rounds = process.env.BCRYPT_SALT;
+const rounds = parseInt(process.env.BCRYPT_SALT);
 
 const jwt = require("jsonwebtoken");
 const tokenSecret = process.env.TOKEN_SECRET;
