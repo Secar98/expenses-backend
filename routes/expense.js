@@ -65,6 +65,28 @@ router.post("/add", verify, (req, res) => {
 router.delete("/delete", verify, (req, res) => {
   const userId = req.user;
   const { id } = req.body;
+
+  UserModel.updateOne(
+    { _id: userId },
+    { $pull: { expenses: id } },
+    (error, expense) => {
+      if (error) {
+        console.log(error);
+      }
+    }
+  ).catch((error) => {
+    res.status(500).json(error);
+  });
+
+  ExpenseModel.deleteOne({ _id: id }, (error) => {
+    if (error) {
+      console.log(error);
+    }
+  }).catch((error) => {
+    res.status(500).json(error);
+  });
+
+  res.status(200).json({ msg: "deleted expense" });
 });
 
 module.exports = router;
