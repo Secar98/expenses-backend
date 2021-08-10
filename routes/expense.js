@@ -66,33 +66,27 @@ router.delete("/delete", verify, async (req, res) => {
   const userId = req.user;
   const { id } = req.body;
 
-  const expenseExists = await ExpenseModel.exists({ _id: id });
-
-  if (expenseExists) {
-    UserModel.updateOne(
-      { _id: userId },
-      { $pull: { expenses: id } },
-      (error, expense) => {
-        if (error) {
-          console.log(error);
-        }
-      }
-    ).catch((error) => {
-      res.status(500).json(error);
-    });
-
-    ExpenseModel.deleteOne({ _id: id }, (error) => {
+  UserModel.updateOne(
+    { _id: userId },
+    { $pull: { expenses: id } },
+    (error, expense) => {
       if (error) {
         console.log(error);
       }
-    }).catch((error) => {
-      res.status(500).json(error);
-    });
+    }
+  ).catch((error) => {
+    res.status(500).json(error);
+  });
 
-    res.status(200).json({ msg: `deleted expense with id: ${id}` });
-  } else {
-    res.status(400).json({ msg: `Expense with id: ${id} could not be found` });
-  }
+  ExpenseModel.deleteOne({ _id: id }, (error) => {
+    if (error) {
+      console.log(error);
+    }
+  }).catch((error) => {
+    res.status(500).json(error);
+  });
+
+  res.status(200).json({ msg: `deleted expense with id: ${id}` });
 });
 
 module.exports = router;

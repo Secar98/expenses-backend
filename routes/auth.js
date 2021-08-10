@@ -42,7 +42,7 @@ router.post("/signup", async (req, res) => {
   const userExists = await User.exists({ email: email });
 
   if (userExists) {
-    res.json({ msg: "User already exists" });
+    res.status(400).json({ msg: "User already exists" });
   } else if (password.length < 6) {
     res.status(400).json({ msg: "Password must be 6 characters long" });
   } else if (password !== password_confirm) {
