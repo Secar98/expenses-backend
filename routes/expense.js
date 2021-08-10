@@ -86,7 +86,7 @@ router.delete("/delete", verify, (req, res) => {
     res.status(500).json(error);
   });
 
-  res.status(200).json({ msg: "deleted expense" });
+  res.status(200).json({ msg: `deleted expense with id: ${id}` });
 });
 
 module.exports = router;
