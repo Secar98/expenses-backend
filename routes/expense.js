@@ -62,7 +62,7 @@ router.post("/add", verify, (req, res) => {
   }
 });
 
-router.post("/delete", verify, async (req, res) => {
+router.delete("/delete", verify, async (req, res) => {
   const userId = req.user;
   const { id } = req.body;
 
