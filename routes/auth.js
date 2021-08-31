@@ -55,7 +55,7 @@ router.post("/signup", async (req, res) => {
         newUser
           .save()
           .then((user) => {
-            res.status(200).json({ msg: "Added User" });
+            res.status(200).json({ token: generateToken(user._id) });
           })
           .catch((error) => {
             res.status(500).json(error);
