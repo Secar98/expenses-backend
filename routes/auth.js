@@ -12,7 +12,7 @@ router.get("/jwt-test", verify, (req, res) => {
   res.status(200).json({ msg: "It works", user: req.user });
 });
 
-router.get("/login", (req, res) => {
+router.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   User.findOne({ email: email })
