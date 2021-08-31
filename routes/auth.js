@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 const tokenSecret = process.env.TOKEN_SECRET;
 
 router.get("/jwt-test", verify, (req, res) => {
-  res.status(200).json({ msg: "It works", user: req.user });
+  res.status(200).json({ msg: "It workss", user: req.user });
 });
 
 router.post("/login", (req, res) => {
