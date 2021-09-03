@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
-const { verify } = require("../middlewear");
 const bcrypt = require("bcrypt");
 const rounds = 10;
 
@@ -18,13 +17,13 @@ router.post("/login", (req, res) => {
     User.findOne({ email: email })
       .then((user) => {
         if (!user) {
-          res.status(404).json({ msg: "no user with that email found" });
+          res.status(404).json({ msg: "No user with that email found" });
         } else {
           bcrypt.compare(password, user.password, (error, match) => {
             if (error) res.status(500).json(error);
             else if (match)
               res.status(200).json({ token: generateToken(user._id) });
-            else res.status(403).json({ msg: "wrong email or password" });
+            else res.status(403).json({ msg: "Wrong email or password" });
           });
         }
       })

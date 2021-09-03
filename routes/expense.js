@@ -66,15 +66,11 @@ router.delete("/delete", verify, async (req, res) => {
   const userId = req.user;
   const { id } = req.body;
 
-  UserModel.updateOne(
-    { _id: userId },
-    { $pull: { expenses: id } },
-    (error, expense) => {
-      if (error) {
-        console.log(error);
-      }
+  UserModel.updateOne({ _id: userId }, { $pull: { expenses: id } }, (error) => {
+    if (error) {
+      console.log(error);
     }
-  ).catch((error) => {
+  }).catch((error) => {
     res.status(500).json(error);
   });
 
@@ -86,7 +82,7 @@ router.delete("/delete", verify, async (req, res) => {
     res.status(500).json(error);
   });
 
-  res.status(200).json({ msg: `deleted expense with id: ${id}` });
+  res.status(200).json({ msg: `Deleted expense with id: ${id}` });
 });
 
 module.exports = router;
