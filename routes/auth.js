@@ -8,29 +8,30 @@ const rounds = 10;
 const jwt = require("jsonwebtoken");
 const tokenSecret = process.env.TOKEN_SECRET;
 
-router.get("/jwt-test", verify, (req, res) => {
-  res.status(200).json({ msg: "It workss", user: req.user });
-});
-
 router.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  User.findOne({ email: email })
-    .then((user) => {
-      if (!user) {
-        res.status(404).json({ msg: "no user with that email found" });
-      } else {
-        bcrypt.compare(password, user.password, (error, match) => {
-          if (error) res.status(500).json(error);
-          else if (match)
-            res.status(200).json({ token: generateToken(user._id) });
-          else res.status(403).json({ msg: "wrong email or password" });
-        });
-      }
-    })
-    .catch((error) => {
-      res.status(500).json(error);
-    });
+
+  if (!email.includes("@")) {
+    res.status(400).json({ msg: "Email must include @" });
+  } else {
+    User.findOne({ email: email })
+      .then((user) => {
+        if (!user) {
+          res.status(404).json({ msg: "no user with that email found" });
+        } else {
+          bcrypt.compare(password, user.password, (error, match) => {
+            if (error) res.status(500).json(error);
+            else if (match)
+              res.status(200).json({ token: generateToken(user._id) });
+            else res.status(403).json({ msg: "wrong email or password" });
+          });
+        }
+      })
+      .catch((error) => {
+        res.status(500).json(error);
+      });
+  }
 });
 
 router.post("/signup", async (req, res) => {
@@ -43,6 +44,8 @@ router.post("/signup", async (req, res) => {
 
   if (userExists) {
     res.status(400).json({ msg: "User already exists" });
+  } else if (!email.includes("@")) {
+    res.status(400).json({ msg: "Email must include @" });
   } else if (password.length < 6) {
     res.status(400).json({ msg: "Password must be 6 characters long" });
   } else if (password !== password_confirm) {
